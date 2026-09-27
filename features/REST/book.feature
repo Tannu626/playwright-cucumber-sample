@@ -42,7 +42,7 @@ Feature: Scenarios related to Book REST API in Library Information System
         Then user should get a status code 200
         Then user updates the book that was added "<updateAvailable>", <updateGenreId>, <updateAuthorID>
         Then user should get a status code 200
-        Then user should see that book details "<bookName>", "<available>", <updateGenreId>, <updateAuthorID>, "<dateAddedIso>" are updated
+        Then user should see that book details "<bookName>", "<updateAvailable>", <updateGenreId>, <updateAuthorID>, "<dateAddedIso>" are updated
         Examples:
             | bookName              | available | genreId | genreName       | authorID | authorName | age | dateAdded  | dateAddedIso | updateAvailable | updateGenreId | updateAuthorID |
             | To Kill a Mockingbird | true      | 21      | Southern Gothic | 31       | Harper Lee | 45  | 1960-07-11 | 2015-01-01   | false           | 50            | 70             |
@@ -56,4 +56,4 @@ Feature: Scenarios related to Book REST API in Library Information System
             And user should see book in search result with details "<bookName>", "<available>", <genreId>, <authorID>, "<dateAddedIso>"
         Examples:
             | bookName            | available | genreId | genreName       | authorID | authorName    | age | dateAdded  | dateAddedIso | startDateIso | endDateIso |
-            | Alice in Wonderland | false     | 51      | Fantasy Fiction | 19       | Lewis Carroll | 68  | 1865-11-01 | 1990-10-01   | 1990-10-01   | 1990-10-31 |
+            | Alice in Wonderland | false     | 51      | Fantasy Fiction | 19       | Lewis Carroll | 68  | 1865-11-01 | 1990-10-01   | 1900-01-01   | 2100-01-01 |

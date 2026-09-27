@@ -7,7 +7,7 @@ export default class RegisterUserPage {
     constructor(private web: UIActions) { }
         
     private FIRST_NAME_TEXTBOX = "#input-firstname";
-    private LAST_NAME_TEXTBOX = "#input-lastname";
+    private LAST_NAME_TEXTBOX = "#input-telephone";
     private EMAIL_TEXTBOX = "#input-email";
     private TELEPHONE_TEXTBOX = "#input-telephone";
     private PASSWORD_TEXTBOX = "#input-password";
