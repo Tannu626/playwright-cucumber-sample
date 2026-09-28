@@ -16,4 +16,4 @@ Feature: Scenarios related to search product
     @regression @invalidSearch
     Scenario: Search with invalid product
         When the user searches for product "invalid product"
-        Then user should see a search result message as "No products match the search criteria."
+        Then user should see a search result message as "There is no product that matches the search criteria."

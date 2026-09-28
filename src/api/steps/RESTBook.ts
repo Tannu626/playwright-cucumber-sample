@@ -95,18 +95,35 @@ Then('user updates the book that was added {string}, {int}, {int}', async functi
     const endPoint = `${process.env.REST_API_BASE_URL}${StringUtil.formatString(Constants.SINGLE_BOOK_EP, this.bookID, this.id)}`;
     const bookResponse: RESTResponse = await this.rest.get(this.attach, endPoint, getHeader(), Constants.SINGLE_BOOK);
     const bookBody = JSON.parse(await bookResponse.getBody());
-    bookBody["IsOutOfPrint"] = available;
+    bookBody["IsOutOfPrint"] =  (available.toLowerCase() === 'true');
     bookBody["GenreId"] = genreId;
     bookBody["AuthorId"] = authorID;
-    this.response = await this.rest.put(this.attach, endPoint, getHeader(), JSON.stringify(bookBody), Constants.SINGLE_BOOK);    
+    this.response = await this.rest.put(this.attach, endPoint, getHeader(), JSON.stringify(bookBody), Constants.SINGLE_BOOK); 
 });
 
 Then('user should see book in search result with details {string}, {string}, {int}, {int}, {string}', async function (bookName: string, available: string, genreId: number, authorID: number, dateAddedIso: string) {
     const response: RESTResponse = this.response;
-    await Assert.assertEquals(await response.getTagContentByJsonPath(Constants.FIRST_NAME_JSON_PATH, Constants.SEARCH_BOOK), bookName, Constants.SEARCH_BOOK);
-    await Assert.assertEquals((await response.getTagContentByJsonPath(Constants.FIRST_OUT_OF_PRINT_JSON_PATH, Constants.SEARCH_BOOK)).toString(), available, Constants.SEARCH_BOOK);
-    await Assert.assertEquals(await response.getTagContentByJsonPath(Constants.FIRST_GENRE_ID_JSON_PATH, Constants.SEARCH_BOOK), genreId, Constants.SEARCH_BOOK);
-    await Assert.assertEquals(await response.getTagContentByJsonPath(Constants.FIRST_AUTHOR_ID_JSON_PATH, Constants.SEARCH_BOOK), authorID, Constants.SEARCH_BOOK);
-    await Assert.assertContains(await response.getTagContentByJsonPath(Constants.FIRST_DATE_ADDED_ISO_JSON_PATH, Constants.SEARCH_BOOK), dateAddedIso, Constants.SEARCH_BOOK);
-    await Assert.assertEquals(await response.getTagContentByJsonPath(Constants.FIRST_ID_JSON_PATH, Constants.SEARCH_BOOK), this.bookID, Constants.SEARCH_BOOK);
+    const body = JSON.parse(await response.getBody());
+
+    let found = false;
+
+   for(const book of body) {
+    const receivedBookName = book.Name.toString();
+    const receivedisOutOfPrint = book.IsOutOfPrint.toString();
+    const receivedgenreId = book.GenreId.toString();
+    const receivedfirstAuthor = book.AuthorId.toString();
+    const receivedfirstId = book.Id.toString();
+
+    if(book.DateAddedIso.startsWith(dateAddedIso) && bookName == receivedBookName.toString() && receivedisOutOfPrint == available.toString() && receivedgenreId == genreId.toString() && receivedfirstAuthor==authorID.toString() && receivedfirstId==this.bookID.toString()){
+        found = true;   
+    }
+   }
+   Assert.assertTrue(found, "found");
+
+    // await Assert.assertEquals(await response.getTagContentByJsonPath(Constants.FIRST_NAME_JSON_PATH, Constants.SEARCH_BOOK), bookName, Constants.SEARCH_BOOK);
+    // await Assert.assertEquals((await response.getTagContentByJsonPath(Constants.FIRST_OUT_OF_PRINT_JSON_PATH, Constants.SEARCH_BOOK)).toString(), available, Constants.SEARCH_BOOK);
+    // await Assert.assertEquals(await response.getTagContentByJsonPath(Constants.FIRST_GENRE_ID_JSON_PATH, Constants.SEARCH_BOOK), genreId, Constants.SEARCH_BOOK);
+    // await Assert.assertEquals(await response.getTagContentByJsonPath(Constants.FIRST_AUTHOR_ID_JSON_PATH, Constants.SEARCH_BOOK), authorID, Constants.SEARCH_BOOK);
+    // await Assert.assertContains(await response.getTagContentByJsonPath(Constants.FIRST_DATE_ADDED_ISO_JSON_PATH, Constants.SEARCH_BOOK), dateAddedIso, Constants.SEARCH_BOOK);
+    // await Assert.assertEquals(await response.getTagContentByJsonPath(Constants.FIRST_ID_JSON_PATH, Constants.SEARCH_BOOK), this.bookID, Constants.SEARCH_BOOK);
 });

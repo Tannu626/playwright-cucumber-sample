@@ -15,7 +15,7 @@ export default class SearchResultsPage {
     public async verifySearchResult(product: string) {
         const products = await this.web.element(this.SEARCH_RESULT_PRODUCT_TEXT, Constants.PRODUCT).getAllTextContent();
         for(const prod of products) {
-            await Assert.assertContainsIgnoreCase(product, prod, Constants.PRODUCT);
+            await Assert.assertContainsIgnoreCase(prod, product, Constants.PRODUCT);
         }
     }
     /**
